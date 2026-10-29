@@ -8,6 +8,14 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 
 ## registro de cambios
 
+### 2026-10-29 — fichas educativas de bugs
+
+- convertido el catálogo en fichas navegables por incidencia.
+- añadido recorrido de detección, documentación y automatización.
+- mostrado código Playwright y archivo de referencia para cada caso.
+- añadido enlace para reproducir el bug en la aplicación bajo prueba.
+- añadido cobertura e2e de la navegación desde el catálogo a una ficha.
+
 ### 2026-10-29 — casos de prueba ejecutables
 
 - cada caso de prueba visible enlaza con el flujo correspondiente de la aplicación.
