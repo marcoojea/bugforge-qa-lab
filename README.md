@@ -95,6 +95,16 @@ los tests e2e usan Chromium y levantan Vite automáticamente. la suite separa fl
 
 la estrategia completa está en [docs/quality-strategy.md](docs/quality-strategy.md). combina lint, typecheck, build, pruebas unitarias de fixtures, e2e con Playwright y revisión manual de teclado y responsive.
 
+## cómo usar el laboratorio como libro de bugs
+
+entra en `incidencias` y abre la ficha de cualquier bug. cada ficha sigue el mismo recorrido:
+
+1. detectar: pasos manuales y señales que confirman el problema.
+2. documentar: qué datos, evidencias y contexto debe incluir un buen reporte.
+3. automatizar: código Playwright, archivo de referencia y estado del test.
+
+el botón `reproducir en la aplicación` lleva al flujo bajo prueba. los ejemplos marcados como `automatizado` están cubiertos por la suite actual; los marcados como `propuesto` enseñan el siguiente caso que debería incorporarse.
+
 ## decisiones técnicas
 
 la primera decisión arquitectónica está documentada en [docs/decisions/0001-frontend-only.md](docs/decisions/0001-frontend-only.md). se prioriza ejecución local simple sobre introducir backend antes de necesitarlo.
