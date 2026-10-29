@@ -105,6 +105,8 @@ entra en `incidencias` y abre la ficha de cualquier bug. cada ficha sigue el mis
 
 el botón `reproducir en la aplicación` lleva al flujo bajo prueba. los ejemplos marcados como `automatizado` están cubiertos por la suite actual; los marcados como `propuesto` enseñan el siguiente caso que debería incorporarse.
 
+la sección `acceso demo` contiene un login, recuperación de contraseña y cierre de sesión simulados. no hay autenticación real ni credenciales externas: se usan para practicar casos básicos de validación, sesión, permisos, mensajes de error, estados de carga y navegación.
+
 ## decisiones técnicas
 
 la primera decisión arquitectónica está documentada en [docs/decisions/0001-frontend-only.md](docs/decisions/0001-frontend-only.md). se prioriza ejecución local simple sobre introducir backend antes de necesitarlo.

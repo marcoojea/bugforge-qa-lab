@@ -8,6 +8,14 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 
 ## registro de cambios
 
+### 2026-10-29 — flujos básicos de autenticación simulada
+
+- añadido login demo con credenciales controladas.
+- añadido flujo de recuperación de contraseña.
+- añadido cierre de sesión simulado para explorar navegación y sesión.
+- añadido `TC-006` a `TC-010` y las incidencias `BUG-106` a `BUG-109`.
+- añadido suite Playwright para login válido, credenciales inválidas y fallos conocidos de recuperación y logout.
+
 ### 2026-10-29 — fichas educativas de bugs
 
 - convertido el catálogo en fichas navegables por incidencia.
