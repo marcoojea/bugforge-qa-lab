@@ -117,9 +117,10 @@ la api y PostgreSQL están documentados en [docs/decisions/0002-api-and-postgres
 
 ## limitaciones conocidas
 
-- la interfaz usa fixtures locales; la api persiste solo cuando se activa PostgreSQL.
+- la interfaz usa fixtures locales; las incidencias creadas viven durante la sesión demo y la api persiste solo cuando se activa PostgreSQL.
 - los permisos son simulados; no hay autenticación real.
 - la aplicación contiene defectos intencionados y no representa un producto listo para producción.
+- la sesión demo usa una marca local controlada; no es un sistema de autenticación real.
 - el repositorio es público y está publicado en GitHub.
 - `main` está protegido con el ruleset `protect-main` y el job `quality`.
 

@@ -1,8 +1,9 @@
 import { FormEvent, useState } from 'react'
-import { Link, NavLink, Route, Routes, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, NavLink, Route, Routes, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { incidents, users, type Incident, type IncidentStatus, type Role } from '../data/fixtures'
 
-const appNav = [['/app', 'resumen'], ['/app/incidents', 'incidencias'], ['/app/users', 'usuarios']] as const
+const appNav = [['/app?session=demo', 'resumen'], ['/app/incidents?session=demo', 'incidencias'], ['/app/users?session=demo', 'usuarios']] as const
+type NewIncidentData = Pick<Incident, 'title' | 'severity' | 'evidence' | 'automationCode'>
 
 export function AppUnderTest() {
   const [searchParams] = useSearchParams()
@@ -10,17 +11,17 @@ export function AppUnderTest() {
   const initialRole: Role = requestedRole === 'admin' || requestedRole === 'viewer' ? requestedRole : 'analyst'
   const [role, setRole] = useState<Role>(initialRole)
   const [currentIncidents, setCurrentIncidents] = useState(incidents)
-  const createIncident = (title: string, severity: Incident['severity']) => {
-    setCurrentIncidents((previous) => [...previous, { id: `BUG-${101 + previous.length}`, title, severity, status: 'open', owner: 'bruno qa', summary: 'incidencia creada durante la sesión de prueba.' }])
+  const createIncident = (data: NewIncidentData) => {
+    setCurrentIncidents((previous) => [...previous, { ...data, id: `BUG-${101 + previous.length}`, status: 'open', owner: 'bruno qa', summary: 'incidencia creada durante la sesión de prueba.' }])
   }
   const deleteIncident = (id: string) => setCurrentIncidents((previous) => previous.filter((incident) => incident.id !== id))
   return <div className="product-shell">
     <header className="product-header">
       <Link to="/" className="brand">bugforge <span>qa lab</span></Link>
-      <nav aria-label="navegación de la aplicación">{appNav.map(([to, label]) => <NavLink key={to} to={to} end={to === '/app'}>{label}</NavLink>)}<Link className="logout-link" to="/login?loggedOut=1">cerrar sesión</Link></nav>
+      <nav aria-label="navegación de la aplicación">{appNav.map(([to, label]) => <NavLink key={to} to={to} end={label === 'resumen'}>{label}</NavLink>)}<Link className="logout-link" to="/login?loggedOut=1&next=/app">cerrar sesión</Link></nav>
       <label className="role-switcher">rol de prueba<select aria-label="rol de prueba" value={role} onChange={(event) => setRole(event.target.value as Role)}><option value="admin">admin</option><option value="analyst">analyst</option><option value="viewer">viewer</option></select></label>
     </header>
-    <main className="product-content"><Routes><Route path="/" element={<Dashboard role={role} incidentCount={currentIncidents.length} />} /><Route path="/incidents" element={<IncidentList role={role} incidents={currentIncidents} onDelete={deleteIncident} />} /><Route path="/incidents/new" element={<NewIncident onCreate={createIncident} />} /><Route path="/users" element={<UserList />} /></Routes></main>
+    <main className="product-content"><Routes><Route path="/" element={<Dashboard role={role} incidentCount={currentIncidents.length} />} /><Route path="/incidents" element={<IncidentList role={role} incidents={currentIncidents} onDelete={deleteIncident} />} /><Route path="/incidents/new" element={<NewIncident onCreate={createIncident} />} /><Route path="/incidents/:incidentId" element={<UserIncidentDetail incidents={currentIncidents} />} /><Route path="/users" element={<UserList />} /></Routes></main>
   </div>
 }
 
@@ -36,16 +37,25 @@ function IncidentList({ role, incidents: visibleIncidents, onDelete }: { role: R
   const pageSize = 3
   const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize))
   const paged = filtered.slice((page - 1) * pageSize, page * pageSize)
-  return <section className="page-section"><div className="section-heading"><div><p className="eyebrow">aplicación bajo prueba</p><h1>incidencias</h1></div><Link className="button primary" to="/app/incidents/new">nueva incidencia</Link></div><div className="toolbar"><label htmlFor="incident-search">buscar incidencias</label><input id="incident-search" value={query} onChange={(event) => { setQuery(event.target.value); setPage(1) }} placeholder="id o texto" /><label htmlFor="status-filter">filtrar por estado</label><select id="status-filter" value={status} onChange={(event) => { setStatus(event.target.value as IncidentStatus | 'all'); setPage(1) }}><option value="all">todos</option><option value="open">abierta</option><option value="in-progress">en curso</option><option value="closed">cerrada</option></select></div><div className="incident-list">{paged.map((incident) => <article className="incident-row" key={incident.id}><div><span className={`severity ${incident.severity}`}>{incident.severity}</span><h2>{incident.id}: {incident.title}</h2><p>{incident.summary}</p></div><div className="incident-actions"><span className="status">{incident.status}</span><button className="text-button" type="button" onClick={() => onDelete(incident.id)}>borrar</button></div></article>)}{paged.length === 0 && <div className="empty-state"><h2>sin incidencias</h2><p>prueba otro filtro.</p></div>}</div><div className="pagination" aria-label="paginación"><button className="button secondary" type="button" disabled={page === 1} onClick={() => setPage((current) => current - 1)}>anterior</button><span>página {page} de {pageCount}</span><button className="button secondary" type="button" disabled={page >= pageCount} onClick={() => setPage((current) => current + 1)}>siguiente</button></div><p className="permission-note">rol actual: {role}. algunas acciones están simuladas para testing de permisos.</p></section>
+  return <section className="page-section"><div className="section-heading"><div><p className="eyebrow">aplicación bajo prueba</p><h1>incidencias</h1></div><Link className="button primary" to="/app/incidents/new">nueva incidencia</Link></div><div className="toolbar"><label htmlFor="incident-search">buscar incidencias</label><input id="incident-search" value={query} onChange={(event) => { setQuery(event.target.value); setPage(1) }} placeholder="id o texto" /><label htmlFor="status-filter">filtrar por estado</label><select id="status-filter" value={status} onChange={(event) => { setStatus(event.target.value as IncidentStatus | 'all'); setPage(1) }}><option value="all">todos</option><option value="open">abierta</option><option value="in-progress">en curso</option><option value="closed">cerrada</option></select></div><div className="incident-list">{paged.map((incident) => <article className="incident-row" key={incident.id}><div><span className={`severity ${incident.severity}`}>{incident.severity}</span><h2><Link to={`/app/incidents/${incident.id}`}>{incident.id}: {incident.title}</Link></h2><p>{incident.summary}</p></div><div className="incident-actions"><span className="status">{incident.status}</span><button className="text-button" type="button" onClick={() => onDelete(incident.id)}>borrar</button></div></article>)}{paged.length === 0 && <div className="empty-state"><h2>sin incidencias</h2><p>prueba otro filtro.</p></div>}</div><div className="pagination" aria-label="paginación"><button className="button secondary" type="button" disabled={page === 1} onClick={() => setPage((current) => current - 1)}>anterior</button><span>página {page} de {pageCount}</span><button className="button secondary" type="button" disabled={page >= pageCount} onClick={() => setPage((current) => current + 1)}>siguiente</button></div><p className="permission-note">rol actual: {role}. algunas acciones están simuladas para testing de permisos.</p></section>
 }
 
-function NewIncident({ onCreate }: { onCreate: (title: string, severity: Incident['severity']) => void }) {
+function NewIncident({ onCreate }: { onCreate: (data: NewIncidentData) => void }) {
   const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [severity, setSeverity] = useState<Incident['severity']>('medium')
+  const [evidence, setEvidence] = useState('')
+  const [automationCode, setAutomationCode] = useState('')
   const [message, setMessage] = useState('')
-  const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); if (!title.trim()) { setMessage('completa los campos obligatorios.'); return } onCreate(title.trim(), severity); setMessage('incidencia creada correctamente.'); setTimeout(() => navigate('/app/incidents'), 500) }
-  return <section className="page-section narrow"><p className="eyebrow">aplicación bajo prueba</p><h1>nueva incidencia</h1><form className="bug-form" onSubmit={submit}><label htmlFor="incident-title">título <span aria-hidden="true">*</span></label><input id="incident-title" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="describe el problema" /><label htmlFor="incident-severity">gravedad</label><select id="incident-severity" value={severity} onChange={(event) => setSeverity(event.target.value as Incident['severity'])}><option value="low">baja</option><option value="medium">media</option><option value="high">alta</option><option value="critical">crítica</option></select><button className="button primary" type="submit">crear incidencia</button>{message && <p role="status" className="form-message">{message}</p>}</form></section>
+  const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); if (!title.trim()) { setMessage('completa el título de la incidencia.'); return } onCreate({ title: title.trim(), severity, evidence: evidence.trim(), automationCode: automationCode.trim() }); setMessage('incidencia creada correctamente.'); setTimeout(() => navigate('/app/incidents'), 500) }
+  return <section className="page-section narrow"><p className="eyebrow">aplicación bajo prueba · nueva incidencia</p><h1>documentar incidencia</h1><p className="lead">guarda contexto suficiente para que otra persona pueda reproducirla y automatizarla.</p><form className="bug-form" onSubmit={submit}><label htmlFor="incident-title">título <span aria-hidden="true">*</span></label><input id="incident-title" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="describe el problema" /><label htmlFor="incident-severity">gravedad</label><select id="incident-severity" value={severity} onChange={(event) => setSeverity(event.target.value as Incident['severity'])}><option value="low">baja</option><option value="medium">media</option><option value="high">alta</option><option value="critical">crítica</option></select><label htmlFor="incident-evidence">evidencias y pasos de reproducción</label><textarea id="incident-evidence" value={evidence} onChange={(event) => setEvidence(event.target.value)} placeholder="pasos, resultado esperado, resultado actual, capturas o datos usados" rows={6} /><label htmlFor="incident-code">código Playwright</label><textarea id="incident-code" value={automationCode} onChange={(event) => setAutomationCode(event.target.value)} placeholder="test('reproduce el fallo', async ({ page }) => { ... })" rows={8} /><button className="button primary" type="submit">crear incidencia</button>{message && <p role="status" className="form-message">{message}</p>}</form></section>
+}
+
+function UserIncidentDetail({ incidents: currentIncidents }: { incidents: Incident[] }) {
+  const { incidentId } = useParams()
+  const incident = currentIncidents.find((item) => item.id === incidentId)
+  if (!incident) return <section className="page-section"><h1>incidencia no encontrada</h1><Link className="button secondary" to="/app/incidents?session=demo">volver a incidencias</Link></section>
+  return <section className="page-section"><Link className="back-link" to="/app/incidents?session=demo">← volver a mis incidencias</Link><p className="eyebrow">incidencia documentada · {incident.owner}</p><h1>{incident.id}: {incident.title}</h1><div className="detail-grid"><section className="detail-panel"><p className="eyebrow">evidencias</p><h2>reproducción y contexto</h2><p className="user-content">{incident.evidence || 'sin evidencias añadidas.'}</p><p><strong>estado:</strong> {incident.status}</p><p><strong>gravedad:</strong> {incident.severity}</p></section><section className="detail-panel"><p className="eyebrow">automatización</p><h2>código Playwright</h2><pre><code>{incident.automationCode || '// todavía no hay código asociado.'}</code></pre></section></div></section>
 }
 
 function UserList() {

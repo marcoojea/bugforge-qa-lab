@@ -5,7 +5,11 @@ test.describe('laboratorio público', () => {
     await page.goto('/')
     await expect(page.getByRole('heading', { name: /encuentra el fallo/i })).toBeVisible()
     await page.getByRole('link', { name: 'aplicación bajo prueba' }).first().click()
-    await expect(page).toHaveURL(/\/app$/)
+    await expect(page).toHaveURL(/\/login\?next=/)
+    await page.getByLabel('correo electrónico').fill('analyst@example.test')
+    await page.getByLabel('contraseña').fill('playwright123')
+    await page.getByRole('button', { name: 'iniciar sesión' }).click()
+    await expect(page).toHaveURL(/\/app\?session=demo$/)
     await expect(page.getByRole('heading', { name: 'resumen del laboratorio' })).toBeVisible()
     await page.goto('/incidents')
     await expect(page.getByRole('heading', { name: 'incidencias conocidas' })).toBeVisible()
@@ -18,12 +22,18 @@ test.describe('laboratorio público', () => {
   })
 
   test('crea una incidencia válida', async ({ page }) => {
-    await page.goto('/app/incidents/new')
+    await page.goto('/app/incidents/new?session=demo')
     await page.getByLabel('título').fill('el botón de guardar no confirma el estado')
     await page.getByLabel('gravedad').selectOption('high')
+    await page.getByLabel('evidencias y pasos de reproducción').fill('1. abre el flujo\n2. pulsa guardar\nactual: no aparece confirmación')
+    await page.getByLabel('código Playwright').fill("test('confirma el guardado', async ({ page }) => { await page.getByRole('button', { name: 'guardar' }).click() })")
     await page.getByRole('button', { name: 'crear incidencia' }).click()
     await expect(page.getByRole('status')).toHaveText('incidencia creada correctamente.')
     await expect(page).toHaveURL(/\/app\/incidents/, { timeout: 2000 })
+    await page.getByRole('link', { name: /el botón de guardar/ }).click()
+    await expect(page.getByRole('heading', { name: /el botón de guardar/ })).toBeVisible()
+    await expect(page.getByText('actual: no aparece confirmación')).toBeVisible()
+    await expect(page.locator('pre')).toContainText('confirma el guardado')
   })
 
   test('consulta la ficha educativa de una incidencia', async ({ page }) => {
@@ -56,7 +66,7 @@ test.describe('laboratorio público', () => {
 
 test.describe('fallos conocidos', () => {
   test.fail('BUG-101 conserva el filtro al volver a la lista', async ({ page }) => {
-    await page.goto('/app/incidents')
+    await page.goto('/app/incidents?session=demo')
     await page.getByLabel('filtrar por estado').selectOption('in-progress')
     await page.getByRole('link', { name: 'usuarios' }).click()
     await page.getByRole('link', { name: 'incidencias' }).click()
@@ -64,13 +74,13 @@ test.describe('fallos conocidos', () => {
   })
 
   test.fail('BUG-102 muestra validación específica por campo', async ({ page }) => {
-    await page.goto('/app/incidents/new')
+    await page.goto('/app/incidents/new?session=demo')
     await page.getByRole('button', { name: 'crear incidencia' }).click()
     await expect(page.getByText('el título es obligatorio')).toBeVisible()
   })
 
   test.fail('BUG-103 bloquea alta para rol viewer', async ({ page }) => {
-    await page.goto('/app')
+    await page.goto('/app?session=demo')
     await page.getByLabel('rol de prueba').selectOption('viewer')
     await page.getByRole('link', { name: 'incidencias' }).click()
     await expect(page.getByRole('link', { name: 'nueva incidencia' })).toHaveCount(0)

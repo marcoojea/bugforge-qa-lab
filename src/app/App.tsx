@@ -1,5 +1,5 @@
-import { Link, NavLink, Route, Routes, useNavigate, useParams } from 'react-router-dom'
-import { FormEvent, useMemo, useState, type ReactNode } from 'react'
+import { Link, NavLink, Route, Routes, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { FormEvent, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { AppUnderTest } from './AppUnderTest'
 import { expectedTestCases, qualityIncidents } from '../data/qualityCatalog'
 
@@ -45,13 +45,19 @@ function Home() {
 
 function Login() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
+  useEffect(() => {
+    if (searchParams.get('loggedOut') === '1') sessionStorage.removeItem('bugforge-session')
+  }, [searchParams])
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (email === 'analyst@example.test' && password === 'playwright123') {
-      navigate('/app?session=demo')
+      sessionStorage.setItem('bugforge-session', 'demo')
+      const destination = searchParams.get('next') || '/app'
+      navigate(`${destination}${destination.includes('?') ? '&' : '?'}session=demo`)
       return
     }
     setMessage('el correo o la contraseña no son correctos.')
@@ -119,5 +125,17 @@ function Results() {
 }
 
 export default function App() {
-  return <Routes><Route path="/app/*" element={<AppUnderTest />} /><Route path="*" element={<Layout><Routes><Route path="/" element={<Home />} /><Route path="/incidents" element={<Incidents />} /><Route path="/incidents/:incidentId" element={<IncidentDetail />} /><Route path="/test-cases" element={<TestCases />} /><Route path="/login" element={<Login />} /><Route path="/forgot-password" element={<ForgotPassword />} /><Route path="/results" element={<Results />} /></Routes></Layout>} /></Routes>
+  return <Routes><Route path="/app/*" element={<ProtectedApp />} /><Route path="*" element={<Layout><Routes><Route path="/" element={<Home />} /><Route path="/incidents" element={<Incidents />} /><Route path="/incidents/:incidentId" element={<IncidentDetail />} /><Route path="/test-cases" element={<TestCases />} /><Route path="/login" element={<Login />} /><Route path="/forgot-password" element={<ForgotPassword />} /><Route path="/results" element={<Results />} /></Routes></Layout>} /></Routes>
+}
+
+function ProtectedApp() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const explicitSession = new URLSearchParams(location.search).get('session') === 'demo'
+  const hasSession = explicitSession || sessionStorage.getItem('bugforge-session') === 'demo'
+  useEffect(() => {
+    if (explicitSession) sessionStorage.setItem('bugforge-session', 'demo')
+    if (!hasSession) navigate(`/login?next=${encodeURIComponent(location.pathname + location.search)}`, { replace: true })
+  }, [explicitSession, hasSession, location.pathname, location.search, navigate])
+  return hasSession ? <AppUnderTest /> : null
 }

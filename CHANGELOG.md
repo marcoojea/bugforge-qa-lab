@@ -8,6 +8,14 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 
 ## registro de cambios
 
+### 2026-10-29 — sesión protegida y documentación de incidencias creadas
+
+- la aplicación bajo prueba ya no abre una sesión automáticamente al entrar desde el menú.
+- las rutas internas requieren login demo y conservan la ruta de retorno.
+- una incidencia creada guarda evidencias, pasos de reproducción y código Playwright.
+- las incidencias creadas se pueden abrir desde la lista para consultar su ficha propia.
+- añadido e2e del flujo completo: crear, consultar evidencias y revisar automatización.
+
 ### 2026-10-29 — modo misión y panel de resultados
 
 - añadido modo misión por incidencia con reproducción, pistas y código Playwright bajo demanda.
