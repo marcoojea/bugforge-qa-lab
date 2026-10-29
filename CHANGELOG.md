@@ -64,7 +64,6 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 
 ## decisiones pendientes
 
-- activar protección de `main` cuando haya colaboradores.
 - decidir si la interfaz debe consumir la api por defecto o mantener fixtures para enseñar ambos enfoques.
 
 ## cómo actualizar este archivo
