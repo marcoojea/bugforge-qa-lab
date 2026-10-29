@@ -8,6 +8,13 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 
 ## registro de cambios
 
+### 2026-10-29 — identidad visual dark arcade
+
+- cambiado el tema claro por una interfaz azul marino con acentos cyan, lima, rosa y ámbar.
+- reorganizadas las incidencias en una cuadrícula responsive de tarjetas.
+- renombradas las incidencias para describir el fallo sin depender del contexto de la ficha.
+- mejorados foco, contraste, navegación y lectura de estados en las vistas principales.
+
 ### 2026-10-29 — flujos básicos de autenticación simulada
 
 - añadido login demo con credenciales controladas.
