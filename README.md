@@ -18,7 +18,7 @@ demostrar criterio profesional de testing: explorar una aplicación, detectar pr
 
 ## arquitectura mínima
 
-el laboratorio empezará como una aplicación frontend-only:
+el laboratorio empieza como una aplicación frontend-only:
 
 - react + typescript + vite para la interfaz.
 - react router para navegación.
@@ -91,39 +91,39 @@ la primera decisión arquitectónica está documentada en [docs/decisions/0001-f
 - los datos no persisten al recargar.
 - los permisos y estados de red son simulados.
 - la aplicación contiene defectos intencionados y no representa un producto listo para producción.
-- todavía no existe remoto GitHub conectado desde este entorno.
+- el repositorio es público y está publicado en GitHub.
 
 ## mejoras futuras
 
 - completar todas las reproducciones e2e del catálogo.
 - añadir estados de carga, error y lista vacía más variados.
 - añadir api con validación de servidor y PostgreSQL reproducible si aporta valor.
-- publicar el repositorio y proteger `main` con las comprobaciones de ci.
+- proteger `main` con las comprobaciones de ci cuando el repositorio tenga colaboradores.
 
 ## documentación
 
 - [producto y cambios](CHANGELOG.md)
 - objetivo y alcance: este documento.
 - arquitectura: este documento y las decisiones técnicas que se añadan.
-- guía de instalación y ejecución: se completará al crear el primer slice ejecutable.
-- catálogo de incidencias: `docs/incidents/` y sección visible en la aplicación.
-- estrategia de testing: se documentará junto con los primeros tests.
+- guía de instalación y ejecución: sección de instalación y scripts de `package.json`.
+- catálogo de incidencias: `src/data/qualityCatalog.ts` y sección visible en la aplicación.
+- estrategia de testing: [docs/quality-strategy.md](docs/quality-strategy.md).
 - limitaciones y mejoras futuras: se mantendrán aquí y en `CHANGELOG.md`.
 
 ## fases
 
-1. preparar proyecto y aplicación mínima.
-2. comprobar ejecución, lint, typecheck y build.
-3. añadir fallos intencionados y catálogo de incidencias.
-4. crear tests de playwright por funcionalidad.
-5. añadir evidencias, documentación completa y github actions.
-6. revisar accesibilidad, responsive y estabilidad de los tests.
+1. preparar proyecto y aplicación mínima: completado.
+2. comprobar ejecución, lint, typecheck y build: completado.
+3. añadir fallos intencionados y catálogo de incidencias: completado.
+4. crear tests de playwright por funcionalidad: completado.
+5. añadir evidencias, documentación completa y github actions: completado.
+6. revisar accesibilidad, responsive y estabilidad de los tests: en mejora continua.
 
 cada fase debe dejar el repositorio en un estado comprobable antes de iniciar la siguiente.
 
 ## estado actual
 
-repositorio creado. aplicación mínima ejecutable preparada. catálogo de fallos y automatización e2e pendientes.
+repositorio público creado. aplicación mínima ejecutable, catálogo, automatización y ci preparados.
 
 ## licencia
 

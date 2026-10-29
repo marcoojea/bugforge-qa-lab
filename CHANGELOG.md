@@ -36,6 +36,12 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 - documentada estrategia de testing y política para fallos conocidos.
 - documentada decisión de comenzar frontend-only y sus limitaciones.
 
+### 2026-10-29 — publicación
+
+- creado repositorio público `marcoojea/bugforge-qa-lab`.
+- conectado el remoto `origin` y subida la rama `main`.
+- verificada la presencia de `README.md` en GitHub.
+
 ### 2026-10-29 — base del repositorio
 
 - creado repositorio local `bugforge-qa-lab`.
