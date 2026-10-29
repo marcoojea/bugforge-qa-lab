@@ -17,6 +17,25 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 - habilitados scripts de lint, typecheck, build y test.
 - verificados `npm run typecheck`, `npm run lint` y `npm run build`.
 
+### 2026-10-29 — catálogo de calidad
+
+- añadido catálogo público con cinco incidencias reproducibles.
+- añadido catálogo de casos de prueba esperados.
+- documentados instalación, ejecución y comprobaciones locales.
+
+### 2026-10-29 — primera automatización
+
+- añadido `playwright.config.ts` con Chromium, servidor Vite y evidencias de fallo.
+- añadidos flujos e2e de navegación y alta válida.
+- añadidas reproducciones automatizadas para BUG-101, BUG-102 y BUG-103.
+- añadido workflow de GitHub Actions para lint, typecheck, build y e2e.
+
+### 2026-10-29 — estrategia y decisiones
+
+- añadido prueba unitaria de reproducibilidad de fixtures.
+- documentada estrategia de testing y política para fallos conocidos.
+- documentada decisión de comenzar frontend-only y sus limitaciones.
+
 ### 2026-10-29 — base del repositorio
 
 - creado repositorio local `bugforge-qa-lab`.

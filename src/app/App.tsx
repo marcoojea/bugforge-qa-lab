@@ -1,6 +1,7 @@
 import { NavLink, Route, Routes } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { AppUnderTest } from './AppUnderTest'
+import { expectedTestCases, qualityIncidents } from '../data/qualityCatalog'
 
 const navItems = [
   ['/', 'inicio'],
@@ -42,11 +43,11 @@ function Home() {
 }
 
 function Incidents() {
-  return <section className="page-section"><p className="eyebrow">catálogo de calidad</p><h1>incidencias conocidas</h1><p className="lead">fallos intencionados para practicar detección, documentación y regresión.</p><div className="empty-state"><h2>catálogo en construcción</h2><p>la primera incidencia aparecerá en la siguiente fase.</p></div></section>
+  return <section className="page-section"><p className="eyebrow">catálogo de calidad</p><h1>incidencias conocidas</h1><p className="lead">fallos intencionados para practicar detección, documentación y regresión.</p><div className="catalog-list">{qualityIncidents.map((incident) => <article className="catalog-item" key={incident.id}><div className="catalog-title"><span className={`severity ${incident.severity === 'crítica' ? 'critical' : incident.severity}`}>{incident.severity}</span><span className="catalog-id">{incident.id} · {incident.area}</span><h2>{incident.title}</h2></div><p><strong>pasos:</strong> {incident.steps.join(' → ')}</p><p><strong>esperado:</strong> {incident.expected}</p><p><strong>actual:</strong> {incident.actual}</p><span className="status">{incident.status}</span></article>)}</div></section>
 }
 
 function TestCases() {
-  return <section className="page-section"><p className="eyebrow">automatización</p><h1>casos de prueba</h1><p className="lead">cada caso relacionará una intención de negocio con un flujo reproducible.</p><div className="empty-state"><h2>casos en construcción</h2><p>los primeros escenarios se añadirán junto a la aplicación bajo prueba.</p></div></section>
+  return <section className="page-section"><p className="eyebrow">automatización</p><h1>casos de prueba</h1><p className="lead">cada caso relaciona una intención de negocio con un flujo reproducible.</p><div className="catalog-list">{expectedTestCases.map((testCase) => <article className="catalog-item" key={testCase.id}><div className="catalog-title"><span className="catalog-id">{testCase.id} · {testCase.area}</span><h2>{testCase.title}</h2></div><p><strong>resultado esperado:</strong> {testCase.expected}</p></article>)}</div></section>
 }
 
 function Results() {

@@ -60,6 +60,46 @@ docs/
 
 la primera slice ya incluye la navegación pública, la aplicación bajo prueba, fixtures de usuarios e incidencias y un formulario de creación local.
 
+## instalación y ejecución
+
+```bash
+npm install
+npm run dev
+```
+
+comprobaciones locales:
+
+```bash
+npm run lint
+npm run typecheck
+npm run build
+npm run test:e2e
+```
+
+los tests e2e usan Chromium y levantan Vite automáticamente. la suite separa flujos correctos de fallos conocidos; estos últimos usan `test.fail` y deben seguir fallando mientras la incidencia siga abierta.
+
+## estrategia de testing
+
+la estrategia completa está en [docs/quality-strategy.md](docs/quality-strategy.md). combina lint, typecheck, build, pruebas unitarias de fixtures, e2e con Playwright y revisión manual de teclado y responsive.
+
+## decisiones técnicas
+
+la primera decisión arquitectónica está documentada en [docs/decisions/0001-frontend-only.md](docs/decisions/0001-frontend-only.md). se prioriza ejecución local simple sobre introducir backend antes de necesitarlo.
+
+## limitaciones conocidas
+
+- los datos no persisten al recargar.
+- los permisos y estados de red son simulados.
+- la aplicación contiene defectos intencionados y no representa un producto listo para producción.
+- todavía no existe remoto GitHub conectado desde este entorno.
+
+## mejoras futuras
+
+- completar todas las reproducciones e2e del catálogo.
+- añadir estados de carga, error y lista vacía más variados.
+- añadir api con validación de servidor y PostgreSQL reproducible si aporta valor.
+- publicar el repositorio y proteger `main` con las comprobaciones de ci.
+
 ## documentación
 
 - [producto y cambios](CHANGELOG.md)
