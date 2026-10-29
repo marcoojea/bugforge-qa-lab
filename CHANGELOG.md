@@ -42,6 +42,13 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 - conectado el remoto `origin` y subida la rama `main`.
 - verificada la presencia de `README.md` en GitHub.
 
+### 2026-10-29 — api y PostgreSQL
+
+- añadido servidor REST educativo con validación `zod`, errores estructurados y permisos simulados.
+- añadido almacenamiento en memoria y PostgreSQL opcional con `docker compose`.
+- añadido contrato, semillas, documentación y tests de api.
+- añadida licencia MIT.
+
 ### 2026-10-29 — base del repositorio
 
 - creado repositorio local `bugforge-qa-lab`.
@@ -51,9 +58,8 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 
 ## decisiones pendientes
 
-- licencia pública.
-- nombre y configuración del repositorio remoto.
-- decisión futura sobre api y postgresql, si el laboratorio necesita demostrar validación de servidor.
+- activar protección de `main` cuando haya colaboradores.
+- decidir si la interfaz debe consumir la api por defecto o mantener fixtures para enseñar ambos enfoques.
 
 ## cómo actualizar este archivo
 

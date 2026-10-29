@@ -1,5 +1,7 @@
 # decisión 0001: primera fase frontend-only
 
+> estado histórico: supersedida parcialmente por `0002-api-and-postgresql.md`. la interfaz sigue usando fixtures locales; la api educativa ya existe.
+
 ## contexto
 
 el objetivo inicial es enseñar exploración, documentación y automatización de una aplicación pública. añadir api y PostgreSQL desde el primer commit introduciría configuración, migraciones y dependencias que no son necesarias para demostrar esos flujos.

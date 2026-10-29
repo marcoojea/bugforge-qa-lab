@@ -9,6 +9,7 @@ demostrar criterio profesional de testing: explorar una aplicación, detectar pr
 ## alcance inicial
 
 - aplicación react + typescript con varias páginas y formularios.
+- api node con validación de servidor, permisos simulados y almacenamiento en memoria o PostgreSQL.
 - flujos de usuarios, incidencias, casos de prueba y panel de resultados.
 - datos locales deterministas, sin autenticación real, pagos ni despliegue complejo.
 - fallos intencionados de validación, usabilidad, navegación, accesibilidad, estados, responsive y permisos simulados.
@@ -18,7 +19,7 @@ demostrar criterio profesional de testing: explorar una aplicación, detectar pr
 
 ## arquitectura mínima
 
-el laboratorio empieza como una aplicación frontend-only:
+el laboratorio usa una interfaz frontend y una api educativa opcional:
 
 - react + typescript + vite para la interfaz.
 - react router para navegación.
@@ -26,8 +27,9 @@ el laboratorio empieza como una aplicación frontend-only:
 - servicios locales pequeños para centralizar lectura y mutaciones de datos.
 - playwright para pruebas de navegador.
 - github actions para instalar, validar, construir y ejecutar e2e.
+- `node:http`, `zod` y `pg` para el contrato de api.
 
-no se añadirá backend ni postgresql en la primera fase. no aporta suficiente valor al objetivo inicial y haría más difícil la ejecución pública. si una segunda fase necesita demostrar validación de servidor, se añadirá una api pequeña con contratos claros y postgresql reproducible.
+la api funciona en memoria por defecto. PostgreSQL se activa con `DATABASE_URL` y se puede iniciar con `docker compose`.
 
 ## comportamiento e invariantes
 
@@ -50,6 +52,13 @@ src/
   features/
   services/
   styles/
+server/
+  index.ts
+  store.ts
+  validation.ts
+db/
+  schema.sql
+  seed.sql
 tests/
   e2e/
   fixtures/
@@ -65,7 +74,10 @@ la primera slice ya incluye la navegación pública, la aplicación bajo prueba,
 ```bash
 npm install
 npm run dev
+npm run api
 ```
+
+para PostgreSQL: `docker compose up -d postgres` y consulta [docs/api.md](docs/api.md).
 
 comprobaciones locales:
 
@@ -74,6 +86,7 @@ npm run lint
 npm run typecheck
 npm run build
 npm run test:e2e
+npm run test:api
 ```
 
 los tests e2e usan Chromium y levantan Vite automáticamente. la suite separa flujos correctos de fallos conocidos; estos últimos usan `test.fail` y deben seguir fallando mientras la incidencia siga abierta.
@@ -86,10 +99,12 @@ la estrategia completa está en [docs/quality-strategy.md](docs/quality-strategy
 
 la primera decisión arquitectónica está documentada en [docs/decisions/0001-frontend-only.md](docs/decisions/0001-frontend-only.md). se prioriza ejecución local simple sobre introducir backend antes de necesitarlo.
 
+la api y PostgreSQL están documentados en [docs/decisions/0002-api-and-postgresql.md](docs/decisions/0002-api-and-postgresql.md) y [docs/api.md](docs/api.md).
+
 ## limitaciones conocidas
 
-- los datos no persisten al recargar.
-- los permisos y estados de red son simulados.
+- la interfaz usa fixtures locales; la api persiste solo cuando se activa PostgreSQL.
+- los permisos son simulados; no hay autenticación real.
 - la aplicación contiene defectos intencionados y no representa un producto listo para producción.
 - el repositorio es público y está publicado en GitHub.
 
@@ -97,7 +112,6 @@ la primera decisión arquitectónica está documentada en [docs/decisions/0001-f
 
 - completar todas las reproducciones e2e del catálogo.
 - añadir estados de carga, error y lista vacía más variados.
-- añadir api con validación de servidor y PostgreSQL reproducible si aporta valor.
 - proteger `main` con las comprobaciones de ci cuando el repositorio tenga colaboradores.
 
 ## documentación
@@ -118,6 +132,7 @@ la primera decisión arquitectónica está documentada en [docs/decisions/0001-f
 4. crear tests de playwright por funcionalidad: completado.
 5. añadir evidencias, documentación completa y github actions: completado.
 6. revisar accesibilidad, responsive y estabilidad de los tests: en mejora continua.
+7. añadir api con validación y PostgreSQL reproducible: completado.
 
 cada fase debe dejar el repositorio en un estado comprobable antes de iniciar la siguiente.
 
@@ -127,4 +142,4 @@ repositorio público creado. aplicación mínima ejecutable, catálogo, automati
 
 ## licencia
 
-pendiente de decidir antes de publicar.
+licencia MIT. consulta [LICENSE](LICENSE).
