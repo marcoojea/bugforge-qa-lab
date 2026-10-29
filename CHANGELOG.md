@@ -8,6 +8,15 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 
 ## registro de cambios
 
+### 2026-10-29 — primera aplicación ejecutable
+
+- añadido proyecto React + TypeScript + Vite.
+- añadido navegación pública para inicio, catálogo, casos y resultados.
+- añadido aplicación bajo prueba con resumen, incidencias, usuarios y formulario de alta.
+- añadido fixtures locales deterministas.
+- habilitados scripts de lint, typecheck, build y test.
+- verificados `npm run typecheck`, `npm run lint` y `npm run build`.
+
 ### 2026-10-29 — base del repositorio
 
 - creado repositorio local `bugforge-qa-lab`.

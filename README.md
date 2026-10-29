@@ -40,7 +40,7 @@ no se añadirá backend ni postgresql en la primera fase. no aporta suficiente v
 - vistas deben funcionar con teclado y en tamaños móviles representativos.
 - resultados e2e fallidos deben conservar evidencia útil.
 
-## estructura prevista
+## estructura actual y prevista
 
 ```text
 src/
@@ -57,6 +57,8 @@ docs/
   incidents/
   decisions/
 ```
+
+la primera slice ya incluye la navegación pública, la aplicación bajo prueba, fixtures de usuarios e incidencias y un formulario de creación local.
 
 ## documentación
 
@@ -81,7 +83,7 @@ cada fase debe dejar el repositorio en un estado comprobable antes de iniciar la
 
 ## estado actual
 
-repositorio creado. documentación base preparada. aplicación pendiente.
+repositorio creado. aplicación mínima ejecutable preparada. catálogo de fallos y automatización e2e pendientes.
 
 ## licencia
 
