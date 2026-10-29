@@ -49,6 +49,12 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 - añadido contrato, semillas, documentación y tests de api.
 - añadida licencia MIT.
 
+### 2026-10-29 — protección del repositorio
+
+- activado ruleset `protect-main` sobre la rama `main`.
+- requerido pull request y comprobación `quality` antes de integrar cambios.
+- bloqueado force push y borrado de la rama principal.
+
 ### 2026-10-29 — base del repositorio
 
 - creado repositorio local `bugforge-qa-lab`.
@@ -58,7 +64,6 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 
 ## decisiones pendientes
 
-- activar protección de `main` cuando haya colaboradores.
 - decidir si la interfaz debe consumir la api por defecto o mantener fixtures para enseñar ambos enfoques.
 
 ## cómo actualizar este archivo

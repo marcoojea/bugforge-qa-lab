@@ -107,12 +107,13 @@ la api y PostgreSQL están documentados en [docs/decisions/0002-api-and-postgres
 - los permisos son simulados; no hay autenticación real.
 - la aplicación contiene defectos intencionados y no representa un producto listo para producción.
 - el repositorio es público y está publicado en GitHub.
+- `main` está protegido con el ruleset `protect-main` y el job `quality`.
 
 ## mejoras futuras
 
 - completar todas las reproducciones e2e del catálogo.
 - añadir estados de carga, error y lista vacía más variados.
-- proteger `main` con las comprobaciones de ci cuando el repositorio tenga colaboradores.
+- mantener actualizado el ruleset `protect-main` si cambia el workflow de ci.
 
 ## documentación
 
