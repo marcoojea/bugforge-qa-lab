@@ -16,7 +16,7 @@ export function AppUnderTest() {
   return <div className="product-shell">
     <header className="product-header">
       <Link to="/" className="brand">bugforge <span>qa lab</span></Link>
-      <nav aria-label="navegación de la aplicación">{appNav.map(([to, label]) => <NavLink key={to} to={to} end={to === '/app'}>{label}</NavLink>)}</nav>
+      <nav aria-label="navegación de la aplicación">{appNav.map(([to, label]) => <NavLink key={to} to={to} end={to === '/app'}>{label}</NavLink>)}<Link className="logout-link" to="/login?loggedOut=1">cerrar sesión</Link></nav>
       <label className="role-switcher">rol de prueba<select aria-label="rol de prueba" value={role} onChange={(event) => setRole(event.target.value as Role)}><option value="admin">admin</option><option value="analyst">analyst</option><option value="viewer">viewer</option></select></label>
     </header>
     <main className="product-content"><Routes><Route path="/" element={<Dashboard role={role} incidentCount={currentIncidents.length} />} /><Route path="/incidents" element={<IncidentList role={role} incidents={currentIncidents} />} /><Route path="/incidents/new" element={<NewIncident onCreate={createIncident} />} /><Route path="/users" element={<UserList />} /></Routes></main>
