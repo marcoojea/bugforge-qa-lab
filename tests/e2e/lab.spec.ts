@@ -34,6 +34,24 @@ test.describe('laboratorio público', () => {
     await expect(page.getByRole('heading', { name: 'regresión con Playwright' })).toBeVisible()
     await expect(page.locator('pre')).toContainText('BUG-101 conserva el filtro')
   })
+
+  test('filtra el catálogo y abre el modo misión', async ({ page }) => {
+    await page.goto('/incidents')
+    await page.getByLabel('filtrar por automatización').selectOption('propuesto')
+    await expect(page.getByText('3 de 9 incidencias visibles')).toBeVisible()
+    await page.getByRole('link', { name: 'abrir misión' }).first().click()
+    await page.getByRole('button', { name: 'mostrar solución' }).click()
+    await expect(page.getByRole('status')).toContainText('resultado esperado')
+    await page.getByRole('button', { name: 'mostrar código' }).click()
+    await expect(page.locator('.mission-code')).toBeVisible()
+  })
+
+  test('muestra el estado del panel de resultados', async ({ page }) => {
+    await page.goto('/results')
+    await expect(page.getByRole('heading', { name: 'resultados' })).toBeVisible()
+    await expect(page.getByText('pipeline preparado')).toBeVisible()
+    await expect(page.getByRole('link', { name: 'ver github actions' })).toHaveAttribute('href', /github.com/)
+  })
 })
 
 test.describe('fallos conocidos', () => {

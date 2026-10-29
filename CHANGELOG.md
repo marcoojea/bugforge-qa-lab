@@ -8,6 +8,13 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 
 ## registro de cambios
 
+### 2026-10-29 — modo misión y panel de resultados
+
+- añadido modo misión por incidencia con reproducción, pistas y código Playwright bajo demanda.
+- añadido filtrado del catálogo por texto, gravedad, área, estado y cobertura de automatización.
+- añadido panel de resultados con métricas legibles, cobertura y enlace a GitHub Actions.
+- añadido cobertura e2e para filtros, misión y panel de resultados.
+
 ### 2026-10-29 — identidad visual dark arcade
 
 - cambiado el tema claro por una interfaz azul marino con acentos cyan, lima, rosa y ámbar.

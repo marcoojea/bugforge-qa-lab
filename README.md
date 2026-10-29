@@ -103,7 +103,7 @@ entra en `incidencias` y abre la ficha de cualquier bug. cada ficha sigue el mis
 2. documentar: qué datos, evidencias y contexto debe incluir un buen reporte.
 3. automatizar: código Playwright, archivo de referencia y estado del test.
 
-el botón `reproducir en la aplicación` lleva al flujo bajo prueba. los ejemplos marcados como `automatizado` están cubiertos por la suite actual; los marcados como `propuesto` enseñan el siguiente caso que debería incorporarse.
+el botón `intenta encontrarlo` lleva al flujo bajo prueba. una misión permite consultar la solución y el código solo después de intentar reproducirla. el catálogo se puede filtrar por texto, gravedad, área, estado y automatización.
 
 la interfaz usa una identidad visual dark arcade: azul marino como base, acentos cyan/lima/rosa para estados y una cuadrícula responsive para escanear el catálogo como un panel técnico.
 
@@ -127,6 +127,7 @@ la api y PostgreSQL están documentados en [docs/decisions/0002-api-and-postgres
 
 - completar todas las reproducciones e2e del catálogo.
 - añadir estados de carga, error y lista vacía más variados.
+- conectar el panel de resultados a artefactos y api de github actions en lugar de usar el resumen determinista actual.
 - mantener actualizado el ruleset `protect-main` si cambia el workflow de ci.
 
 ## documentación

@@ -13,13 +13,14 @@ export function AppUnderTest() {
   const createIncident = (title: string, severity: Incident['severity']) => {
     setCurrentIncidents((previous) => [...previous, { id: `BUG-${101 + previous.length}`, title, severity, status: 'open', owner: 'bruno qa', summary: 'incidencia creada durante la sesión de prueba.' }])
   }
+  const deleteIncident = (id: string) => setCurrentIncidents((previous) => previous.filter((incident) => incident.id !== id))
   return <div className="product-shell">
     <header className="product-header">
       <Link to="/" className="brand">bugforge <span>qa lab</span></Link>
       <nav aria-label="navegación de la aplicación">{appNav.map(([to, label]) => <NavLink key={to} to={to} end={to === '/app'}>{label}</NavLink>)}<Link className="logout-link" to="/login?loggedOut=1">cerrar sesión</Link></nav>
       <label className="role-switcher">rol de prueba<select aria-label="rol de prueba" value={role} onChange={(event) => setRole(event.target.value as Role)}><option value="admin">admin</option><option value="analyst">analyst</option><option value="viewer">viewer</option></select></label>
     </header>
-    <main className="product-content"><Routes><Route path="/" element={<Dashboard role={role} incidentCount={currentIncidents.length} />} /><Route path="/incidents" element={<IncidentList role={role} incidents={currentIncidents} />} /><Route path="/incidents/new" element={<NewIncident onCreate={createIncident} />} /><Route path="/users" element={<UserList />} /></Routes></main>
+    <main className="product-content"><Routes><Route path="/" element={<Dashboard role={role} incidentCount={currentIncidents.length} />} /><Route path="/incidents" element={<IncidentList role={role} incidents={currentIncidents} onDelete={deleteIncident} />} /><Route path="/incidents/new" element={<NewIncident onCreate={createIncident} />} /><Route path="/users" element={<UserList />} /></Routes></main>
   </div>
 }
 
@@ -27,10 +28,15 @@ function Dashboard({ role, incidentCount }: { role: Role; incidentCount: number 
   return <section className="page-section"><p className="eyebrow">aplicación bajo prueba</p><h1>resumen del laboratorio</h1><p className="lead">sesión simulada como <strong>{role}</strong>. explora los flujos y busca comportamientos inconsistentes.</p><div className="metrics"><div><strong>{incidentCount}</strong><span>incidencias visibles</span></div><div><strong>{users.filter((user) => user.active).length}</strong><span>usuarios activos</span></div><div><strong>3</strong><span>casos pendientes</span></div></div></section>
 }
 
-function IncidentList({ role, incidents: visibleIncidents }: { role: Role; incidents: Incident[] }) {
+function IncidentList({ role, incidents: visibleIncidents, onDelete }: { role: Role; incidents: Incident[]; onDelete: (id: string) => void }) {
   const [status, setStatus] = useState<IncidentStatus | 'all'>('all')
-  const filtered = status === 'all' ? visibleIncidents : visibleIncidents.filter((incident) => incident.status === status)
-  return <section className="page-section"><div className="section-heading"><div><p className="eyebrow">aplicación bajo prueba</p><h1>incidencias</h1></div><Link className="button primary" to="/app/incidents/new">nueva incidencia</Link></div><div className="toolbar"><label htmlFor="status-filter">filtrar por estado</label><select id="status-filter" value={status} onChange={(event) => setStatus(event.target.value as IncidentStatus | 'all')}><option value="all">todos</option><option value="open">abierta</option><option value="in-progress">en curso</option><option value="closed">cerrada</option></select></div><div className="incident-list">{filtered.map((incident) => <article className="incident-row" key={incident.id}><div><span className={`severity ${incident.severity}`}>{incident.severity}</span><h2>{incident.id}: {incident.title}</h2><p>{incident.summary}</p></div><span className="status">{incident.status}</span></article>)}{filtered.length === 0 && <div className="empty-state"><h2>sin incidencias</h2><p>prueba otro filtro.</p></div>}</div><p className="permission-note">rol actual: {role}. algunas acciones están simuladas para testing de permisos.</p></section>
+  const [query, setQuery] = useState('')
+  const [page, setPage] = useState(1)
+  const filtered = visibleIncidents.filter((incident) => (status === 'all' || incident.status === status) && `${incident.id} ${incident.title} ${incident.summary}`.toLowerCase().includes(query.toLowerCase()))
+  const pageSize = 3
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize))
+  const paged = filtered.slice((page - 1) * pageSize, page * pageSize)
+  return <section className="page-section"><div className="section-heading"><div><p className="eyebrow">aplicación bajo prueba</p><h1>incidencias</h1></div><Link className="button primary" to="/app/incidents/new">nueva incidencia</Link></div><div className="toolbar"><label htmlFor="incident-search">buscar incidencias</label><input id="incident-search" value={query} onChange={(event) => { setQuery(event.target.value); setPage(1) }} placeholder="id o texto" /><label htmlFor="status-filter">filtrar por estado</label><select id="status-filter" value={status} onChange={(event) => { setStatus(event.target.value as IncidentStatus | 'all'); setPage(1) }}><option value="all">todos</option><option value="open">abierta</option><option value="in-progress">en curso</option><option value="closed">cerrada</option></select></div><div className="incident-list">{paged.map((incident) => <article className="incident-row" key={incident.id}><div><span className={`severity ${incident.severity}`}>{incident.severity}</span><h2>{incident.id}: {incident.title}</h2><p>{incident.summary}</p></div><div className="incident-actions"><span className="status">{incident.status}</span><button className="text-button" type="button" onClick={() => onDelete(incident.id)}>borrar</button></div></article>)}{paged.length === 0 && <div className="empty-state"><h2>sin incidencias</h2><p>prueba otro filtro.</p></div>}</div><div className="pagination" aria-label="paginación"><button className="button secondary" type="button" disabled={page === 1} onClick={() => setPage((current) => current - 1)}>anterior</button><span>página {page} de {pageCount}</span><button className="button secondary" type="button" disabled={page >= pageCount} onClick={() => setPage((current) => current + 1)}>siguiente</button></div><p className="permission-note">rol actual: {role}. algunas acciones están simuladas para testing de permisos.</p></section>
 }
 
 function NewIncident({ onCreate }: { onCreate: (title: string, severity: Incident['severity']) => void }) {
