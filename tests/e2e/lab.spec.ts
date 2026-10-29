@@ -25,6 +25,15 @@ test.describe('laboratorio público', () => {
     await expect(page.getByRole('status')).toHaveText('incidencia creada correctamente.')
     await expect(page).toHaveURL(/\/app\/incidents/, { timeout: 2000 })
   })
+
+  test('consulta la ficha educativa de una incidencia', async ({ page }) => {
+    await page.goto('/incidents')
+    await page.getByRole('link', { name: 'abrir ficha del bug' }).first().click()
+    await expect(page).toHaveURL(/\/incidents\/BUG-101$/)
+    await expect(page.getByRole('heading', { name: 'cómo encontrarlo' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'regresión con Playwright' })).toBeVisible()
+    await expect(page.locator('pre')).toContainText('BUG-101 conserva el filtro')
+  })
 })
 
 test.describe('fallos conocidos', () => {

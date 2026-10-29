@@ -1,4 +1,4 @@
-import { Link, NavLink, Route, Routes } from 'react-router-dom'
+import { Link, NavLink, Route, Routes, useParams } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { AppUnderTest } from './AppUnderTest'
 import { expectedTestCases, qualityIncidents } from '../data/qualityCatalog'
@@ -43,7 +43,18 @@ function Home() {
 }
 
 function Incidents() {
-  return <section className="page-section"><p className="eyebrow">catálogo de calidad</p><h1>incidencias conocidas</h1><p className="lead">fallos intencionados para practicar detección, documentación y regresión.</p><div className="catalog-list">{qualityIncidents.map((incident) => <article className="catalog-item" key={incident.id}><div className="catalog-title"><span className={`severity ${incident.severity === 'crítica' ? 'critical' : incident.severity}`}>{incident.severity}</span><span className="catalog-id">{incident.id} · {incident.area}</span><h2>{incident.title}</h2></div><p><strong>pasos:</strong> {incident.steps.join(' → ')}</p><p><strong>esperado:</strong> {incident.expected}</p><p><strong>actual:</strong> {incident.actual}</p><span className="status">{incident.status}</span></article>)}</div></section>
+  return <section className="page-section"><p className="eyebrow">catálogo de calidad</p><h1>incidencias conocidas</h1><p className="lead">fallos intencionados para practicar detección, documentación y regresión. abre una ficha para aprender el flujo completo.</p><div className="catalog-list">{qualityIncidents.map((incident) => <article className="catalog-item" key={incident.id}><div className="catalog-title"><span className={`severity ${incident.severity === 'crítica' ? 'critical' : incident.severity}`}>{incident.severity}</span><span className="catalog-id">{incident.id} · {incident.area}</span><h2>{incident.title}</h2></div><p><strong>esperado:</strong> {incident.expected}</p><p><strong>actual:</strong> {incident.actual}</p><div className="catalog-meta"><span className="status">{incident.status}</span><Link className="button secondary" to={`/incidents/${incident.id}`}>abrir ficha del bug</Link></div></article>)}</div></section>
+}
+
+function IncidentDetail() {
+  const { incidentId } = useParams()
+  const incident = qualityIncidents.find((item) => item.id === incidentId)
+
+  if (!incident) {
+    return <section className="page-section"><p className="eyebrow">catálogo de calidad</p><h1>incidencia no encontrada</h1><Link className="button secondary" to="/incidents">volver al catálogo</Link></section>
+  }
+
+  return <article className="page-section incident-detail"><Link className="back-link" to="/incidents">← volver al catálogo</Link><div className="detail-header"><div><p className="eyebrow">ficha educativa · {incident.area}</p><p className="catalog-id">{incident.id} · {incident.severity} · {incident.status}</p><h1>{incident.title}</h1></div><Link className="button primary" to={incident.reproducePath}>reproducir en la aplicación</Link></div><p className="lead">esta ficha conecta la exploración manual, la documentación de la incidencia y su regresión automatizada.</p><div className="detail-grid"><section className="detail-panel"><p className="eyebrow">01 · detectar</p><h2>cómo encontrarlo</h2><p>{incident.detection}</p><ol>{incident.steps.map((step) => <li key={step}>{step}</li>)}</ol></section><section className="detail-panel"><p className="eyebrow">02 · documentar</p><h2>qué debe contener el reporte</h2><ul>{incident.documentation.map((item) => <li key={item}>{item}</li>)}</ul><dl className="expected-actual"><div><dt>resultado esperado</dt><dd>{incident.expected}</dd></div><div><dt>resultado actual</dt><dd>{incident.actual}</dd></div></dl></section></div><section className="detail-panel automation-panel"><div className="automation-heading"><div><p className="eyebrow">03 · automatizar</p><h2>regresión con Playwright</h2></div><span className={`automation-status ${incident.automationStatus}`}>{incident.automationStatus}</span></div><p>este ejemplo usa el mismo patrón que debe vivir en la suite e2e: localizadores accesibles, estados observables y una expectativa que demuestra el riesgo.</p><p className="catalog-id">archivo: {incident.testFile}</p><pre><code>{incident.testCode}</code></pre></section></article>
 }
 
 function TestCases() {
@@ -63,5 +74,5 @@ function Results() {
 }
 
 export default function App() {
-  return <Routes><Route path="/app/*" element={<AppUnderTest />} /><Route path="*" element={<Layout><Routes><Route path="/" element={<Home />} /><Route path="/incidents" element={<Incidents />} /><Route path="/test-cases" element={<TestCases />} /><Route path="/results" element={<Results />} /></Routes></Layout>} /></Routes>
+  return <Routes><Route path="/app/*" element={<AppUnderTest />} /><Route path="*" element={<Layout><Routes><Route path="/" element={<Home />} /><Route path="/incidents" element={<Incidents />} /><Route path="/incidents/:incidentId" element={<IncidentDetail />} /><Route path="/test-cases" element={<TestCases />} /><Route path="/results" element={<Results />} /></Routes></Layout>} /></Routes>
 }
