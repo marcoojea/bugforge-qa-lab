@@ -1,4 +1,4 @@
-import { NavLink, Route, Routes } from 'react-router-dom'
+import { Link, NavLink, Route, Routes } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { AppUnderTest } from './AppUnderTest'
 import { expectedTestCases, qualityIncidents } from '../data/qualityCatalog'
@@ -47,7 +47,15 @@ function Incidents() {
 }
 
 function TestCases() {
-  return <section className="page-section"><p className="eyebrow">automatización</p><h1>casos de prueba</h1><p className="lead">cada caso relaciona una intención de negocio con un flujo reproducible.</p><div className="catalog-list">{expectedTestCases.map((testCase) => <article className="catalog-item" key={testCase.id}><div className="catalog-title"><span className="catalog-id">{testCase.id} · {testCase.area}</span><h2>{testCase.title}</h2></div><p><strong>resultado esperado:</strong> {testCase.expected}</p></article>)}</div></section>
+  const flowByCase: Record<string, string> = {
+    'TC-001': '/app/incidents/new',
+    'TC-002': '/app/incidents/new',
+    'TC-003': '/app/incidents',
+    'TC-004': '/app?role=viewer',
+    'TC-005': '/app/incidents',
+  }
+
+  return <section className="page-section"><p className="eyebrow">automatización</p><h1>casos de prueba</h1><p className="lead">cada caso relaciona una intención de negocio con un flujo reproducible.</p><div className="catalog-list">{expectedTestCases.map((testCase) => <article className="catalog-item" key={testCase.id}><div className="catalog-title"><span className="catalog-id">{testCase.id} · {testCase.area}</span><h2>{testCase.title}</h2></div><p><strong>resultado esperado:</strong> {testCase.expected}</p><Link className="button secondary case-action" to={flowByCase[testCase.id]}>abrir flujo de {testCase.id}</Link></article>)}</div></section>
 }
 
 function Results() {

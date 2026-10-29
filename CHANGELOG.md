@@ -8,6 +8,12 @@ su valor no está en tener muchas funcionalidades, sino en hacer visibles los fl
 
 ## registro de cambios
 
+### 2026-10-29 — casos de prueba ejecutables
+
+- cada caso de prueba visible enlaza con el flujo correspondiente de la aplicación.
+- los casos de permisos pueden abrir la aplicación con el rol `viewer` simulado.
+- añadido un e2e que verifica el salto desde `TC-001` hasta el formulario de alta.
+
 ### 2026-10-29 — primera aplicación ejecutable
 
 - añadido proyecto React + TypeScript + Vite.

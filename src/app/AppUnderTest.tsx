@@ -1,11 +1,14 @@
 import { FormEvent, useState } from 'react'
-import { Link, NavLink, Route, Routes, useNavigate } from 'react-router-dom'
+import { Link, NavLink, Route, Routes, useNavigate, useSearchParams } from 'react-router-dom'
 import { incidents, users, type Incident, type IncidentStatus, type Role } from '../data/fixtures'
 
 const appNav = [['/app', 'resumen'], ['/app/incidents', 'incidencias'], ['/app/users', 'usuarios']] as const
 
 export function AppUnderTest() {
-  const [role, setRole] = useState<Role>('analyst')
+  const [searchParams] = useSearchParams()
+  const requestedRole = searchParams.get('role')
+  const initialRole: Role = requestedRole === 'admin' || requestedRole === 'viewer' ? requestedRole : 'analyst'
+  const [role, setRole] = useState<Role>(initialRole)
   const [currentIncidents, setCurrentIncidents] = useState(incidents)
   const createIncident = (title: string, severity: Incident['severity']) => {
     setCurrentIncidents((previous) => [...previous, { id: `BUG-${101 + previous.length}`, title, severity, status: 'open', owner: 'bruno qa', summary: 'incidencia creada durante la sesión de prueba.' }])

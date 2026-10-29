@@ -11,7 +11,10 @@ test.describe('laboratorio público', () => {
     await expect(page.getByRole('heading', { name: 'incidencias conocidas' })).toBeVisible()
     await expect(page.getByText('BUG-101')).toBeVisible()
     await page.goto('/test-cases')
-    await expect(page.getByText('TC-001')).toBeVisible()
+    await expect(page.getByText('TC-001 · incidencias')).toBeVisible()
+    await page.getByRole('link', { name: 'abrir flujo de TC-001' }).click()
+    await expect(page).toHaveURL(/\/app\/incidents\/new$/)
+    await expect(page.getByRole('heading', { name: 'nueva incidencia' })).toBeVisible()
   })
 
   test('crea una incidencia válida', async ({ page }) => {
