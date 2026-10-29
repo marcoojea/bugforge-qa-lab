@@ -23,3 +23,14 @@ Playwright conserva trace, screenshot y vídeo cuando un test falla. GitHub Acti
 ## datos
 
 fixtures TypeScript locales. no dependen de red, reloj, usuario real ni base de datos. cada test navega a un estado inicial controlado.
+## lectura educativa de una incidencia
+
+cada ficha del catálogo debe permitir recorrer el mismo ciclo:
+
+1. detectar el comportamiento con pasos reproducibles.
+2. documentar contexto, datos, esperado, actual y evidencias.
+3. automatizar la regresión con localizadores accesibles y estados observables.
+4. relacionar el ejemplo visible con el archivo real de Playwright.
+
+los casos intencionadamente defectuosos usan `test.fail` mientras la incidencia está abierta. los casos propuestos muestran el patrón esperado y quedan identificados para no confundir cobertura existente con trabajo pendiente.
+
