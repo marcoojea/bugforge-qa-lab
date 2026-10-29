@@ -81,6 +81,61 @@ export const qualityIncidents: QualityIncident[] = [
   await expect(page.locator('body')).toHaveJSProperty('scrollWidth', 320)
 })`,
   },
+  {
+    id: 'BUG-106', title: 'el login no conserva el correo tras credenciales inválidas', severity: 'media', area: 'login y validación', status: 'abierta',
+    steps: ['abre acceso demo', 'introduce un correo válido y una contraseña incorrecta', 'envía el formulario'], expected: 'se muestra un error accionable y el correo permanece para poder corregir solo la contraseña.', actual: 'el mensaje es genérico y el flujo no explica qué dato debe revisarse.',
+    detection: 'prueba credenciales incorrectas variando un solo dato cada vez. observa mensaje, foco, valores conservados y posibilidad de reintentar.',
+    documentation: ['indica qué combinación de credenciales se utilizó.', 'copia el mensaje y registra dónde aparece.', 'anota si el foco vuelve al campo que requiere corrección.', 'no incluyas contraseñas reales en la evidencia.'],
+    automationStatus: 'propuesto', testFile: 'tests/e2e/auth.spec.ts', reproducePath: '/login',
+    testCode: `test('mantiene el correo tras un login inválido', async ({ page }) => {
+  await page.goto('/login')
+  await page.getByLabel('correo electrónico').fill('analyst@example.test')
+  await page.getByLabel('contraseña').fill('incorrecta')
+  await page.getByRole('button', { name: 'iniciar sesión' }).click()
+  await expect(page.getByLabel('correo electrónico')).toHaveValue('analyst@example.test')
+  await expect(page.getByRole('alert')).toBeVisible()
+})`,
+  },
+  {
+    id: 'BUG-107', title: 'recuperación de contraseña acepta un correo inválido', severity: 'alta', area: 'recuperación de acceso', status: 'abierta',
+    steps: ['abre acceso demo', 'entra en «he olvidado la contraseña»', 'envía el formulario vacío o con texto sin formato de correo'], expected: 'el campo muestra una validación clara y no se inicia el flujo con datos inválidos.', actual: 'se muestra un mensaje de éxito aunque el dato esté vacío o no sea un correo.',
+    detection: 'prueba vacío, formato incompleto, espacios y un correo no registrado. comprueba validación, mensaje y que no se revele si una cuenta existe.',
+    documentation: ['conserva el dato de entrada sin incluir información sensible.', 'distingue validación de formato y respuesta de negocio.', 'anota si el mensaje permite enumerar cuentas.', 'adjunta evidencia del estado final.'],
+    automationStatus: 'propuesto', testFile: 'tests/e2e/auth.spec.ts', reproducePath: '/forgot-password',
+    testCode: `test('rechaza un correo inválido al recuperar acceso', async ({ page }) => {
+  await page.goto('/forgot-password')
+  await page.getByLabel('correo electrónico').fill('sin-formato')
+  await page.getByRole('button', { name: 'enviar instrucciones' }).click()
+  await expect(page.getByRole('alert')).toContainText('correo válido')
+})`,
+  },
+  {
+    id: 'BUG-108', title: 'la sesión simulada sigue accesible después de cerrar sesión', severity: 'crítica', area: 'sesión y navegación', status: 'abierta',
+    steps: ['abre la aplicación bajo prueba', 'pulsa «cerrar sesión»', 'vuelve atrás en el navegador o entra directamente en `/app`'], expected: 'la sesión queda invalidada y las rutas de la aplicación requieren volver a identificarse.', actual: 'la aplicación sigue mostrando contenido aunque se haya cerrado la sesión.',
+    detection: 'comprueba siempre el cierre de sesión con navegación atrás, recarga y acceso directo a una ruta interna. en producción también se validaría la invalidación del token en servidor.',
+    documentation: ['registra la ruta protegida visitada.', 'indica la secuencia de logout, back y reload.', 'separa el comportamiento visual del control real de sesión.', 'no uses credenciales reales en las pruebas.'],
+    automationStatus: 'propuesto', testFile: 'tests/e2e/auth.spec.ts', reproducePath: '/app',
+    testCode: `test('impide volver a la aplicación tras cerrar sesión', async ({ page }) => {
+  await page.goto('/app?session=demo')
+  await page.getByRole('link', { name: 'cerrar sesión' }).click()
+  await page.goto('/app')
+  await expect(page).toHaveURL(/login/)
+})`,
+  },
+  {
+    id: 'BUG-109', title: 'el login no ofrece estado de carga ni evita dobles envíos', severity: 'media', area: 'estados y usabilidad', status: 'en análisis',
+    steps: ['abre acceso demo', 'envía el formulario con datos válidos', 'pulsa varias veces mientras se procesa'], expected: 'el botón comunica el estado, evita envíos duplicados y confirma el resultado.', actual: 'no hay estado de carga visible ni protección contra dobles envíos.',
+    detection: 'simula una red lenta y repite la acción. revisa el estado del botón, mensajes, foco y número de solicitudes.',
+    documentation: ['anota las condiciones de red.', 'registra cuántas veces se envió la acción.', 'describe el feedback visible para la persona.', 'adjunta trace o vídeo si el estado desaparece.'],
+    automationStatus: 'propuesto', testFile: 'tests/e2e/auth.spec.ts', reproducePath: '/login',
+    testCode: `test('muestra estado de carga al iniciar sesión', async ({ page }) => {
+  await page.goto('/login')
+  await page.getByLabel('correo electrónico').fill('analyst@example.test')
+  await page.getByLabel('contraseña').fill('playwright123')
+  await page.getByRole('button', { name: 'iniciar sesión' }).click()
+  await expect(page.getByRole('button', { name: 'iniciando sesión' })).toBeDisabled()
+})`,
+  },
 ]
 
 export const expectedTestCases = [
@@ -89,4 +144,9 @@ export const expectedTestCases = [
   { id: 'TC-003', title: 'conservar filtro al volver a la lista', area: 'navegación', expected: 'el filtro y los resultados se mantienen.' },
   { id: 'TC-004', title: 'bloquear alta para rol viewer', area: 'permisos', expected: 'viewer no ve ni puede ejecutar acciones de escritura.' },
   { id: 'TC-005', title: 'mantener lectura usable en 320 px', area: 'responsive', expected: 'no hay overflow horizontal ni controles inaccesibles.' },
+  { id: 'TC-006', title: 'iniciar sesión con credenciales válidas', area: 'login', expected: 'la persona entra en la aplicación y ve el resumen de su sesión demo.' },
+  { id: 'TC-007', title: 'rechazar credenciales inválidas', area: 'login', expected: 'se informa del error sin perder el contexto ni exponer datos sensibles.' },
+  { id: 'TC-008', title: 'validar recuperación de contraseña', area: 'recuperación', expected: 'el formulario rechaza datos inválidos y mantiene un mensaje seguro.' },
+  { id: 'TC-009', title: 'cerrar sesión e invalidar el acceso', area: 'sesión', expected: 'las rutas internas requieren volver a identificarse.' },
+  { id: 'TC-010', title: 'evitar dobles envíos en login', area: 'estados', expected: 'el botón muestra carga y no permite repetir la acción mientras se procesa.' },
 ]

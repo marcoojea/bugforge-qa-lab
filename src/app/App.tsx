@@ -1,5 +1,5 @@
-import { Link, NavLink, Route, Routes, useParams } from 'react-router-dom'
-import type { ReactNode } from 'react'
+import { Link, NavLink, Route, Routes, useNavigate, useParams } from 'react-router-dom'
+import { FormEvent, useState, type ReactNode } from 'react'
 import { AppUnderTest } from './AppUnderTest'
 import { expectedTestCases, qualityIncidents } from '../data/qualityCatalog'
 
@@ -8,6 +8,7 @@ const navItems = [
   ['/app', 'aplicación bajo prueba'],
   ['/incidents', 'incidencias'],
   ['/test-cases', 'casos de prueba'],
+  ['/login', 'acceso demo'],
   ['/results', 'resultados'],
 ] as const
 
@@ -42,6 +43,31 @@ function Home() {
   </>
 }
 
+function Login() {
+  const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [message, setMessage] = useState('')
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (email === 'analyst@example.test' && password === 'playwright123') {
+      navigate('/app?session=demo')
+      return
+    }
+    setMessage('el correo o la contraseña no son correctos.')
+  }
+
+  return <section className="page-section auth-page"><p className="eyebrow">aplicación bajo prueba · acceso</p><h1>iniciar sesión</h1><p className="lead">usa el acceso demo para practicar validación, errores de credenciales y navegación de sesión.</p><form className="bug-form auth-form" onSubmit={submit}><label htmlFor="login-email">correo electrónico</label><input id="login-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="analyst@example.test" autoComplete="username" /><label htmlFor="login-password">contraseña</label><input id="login-password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" /><button className="button primary" type="submit">iniciar sesión</button>{message && <p className="form-message error" role="alert">{message}</p>}</form><p className="auth-help"><Link to="/forgot-password">he olvidado la contraseña</Link></p><p className="demo-hint">credenciales demo: `analyst@example.test` / `playwright123`</p></section>
+}
+
+function ForgotPassword() {
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
+  const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); setMessage('si la cuenta existe, recibirás instrucciones para recuperar el acceso.') }
+
+  return <section className="page-section auth-page"><p className="eyebrow">aplicación bajo prueba · recuperación</p><h1>recuperar acceso</h1><p className="lead">este flujo permite practicar casos límite y mensajes que no deben revelar información de cuentas.</p><form className="bug-form auth-form" onSubmit={submit}><label htmlFor="reset-email">correo electrónico</label><input id="reset-email" type="text" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="tu correo" autoComplete="email" /><button className="button primary" type="submit">enviar instrucciones</button>{message && <p className="form-message" role="status">{message}</p>}</form><p className="auth-help"><Link to="/login">volver al acceso</Link></p></section>
+}
+
 function Incidents() {
   return <section className="page-section"><p className="eyebrow">catálogo de calidad</p><h1>incidencias conocidas</h1><p className="lead">fallos intencionados para practicar detección, documentación y regresión. abre una ficha para aprender el flujo completo.</p><div className="catalog-list">{qualityIncidents.map((incident) => <article className="catalog-item" key={incident.id}><div className="catalog-title"><span className={`severity ${incident.severity === 'crítica' ? 'critical' : incident.severity}`}>{incident.severity}</span><span className="catalog-id">{incident.id} · {incident.area}</span><h2>{incident.title}</h2></div><p><strong>esperado:</strong> {incident.expected}</p><p><strong>actual:</strong> {incident.actual}</p><div className="catalog-meta"><span className="status">{incident.status}</span><Link className="button secondary" to={`/incidents/${incident.id}`}>abrir ficha del bug</Link></div></article>)}</div></section>
 }
@@ -64,6 +90,11 @@ function TestCases() {
     'TC-003': '/app/incidents',
     'TC-004': '/app?role=viewer',
     'TC-005': '/app/incidents',
+    'TC-006': '/login',
+    'TC-007': '/login',
+    'TC-008': '/forgot-password',
+    'TC-009': '/app?session=demo',
+    'TC-010': '/login',
   }
 
   return <section className="page-section"><p className="eyebrow">automatización</p><h1>casos de prueba</h1><p className="lead">cada caso relaciona una intención de negocio con un flujo reproducible.</p><div className="catalog-list">{expectedTestCases.map((testCase) => <article className="catalog-item" key={testCase.id}><div className="catalog-title"><span className="catalog-id">{testCase.id} · {testCase.area}</span><h2>{testCase.title}</h2></div><p><strong>resultado esperado:</strong> {testCase.expected}</p><Link className="button secondary case-action" to={flowByCase[testCase.id]}>abrir flujo de {testCase.id}</Link></article>)}</div></section>
@@ -74,5 +105,5 @@ function Results() {
 }
 
 export default function App() {
-  return <Routes><Route path="/app/*" element={<AppUnderTest />} /><Route path="*" element={<Layout><Routes><Route path="/" element={<Home />} /><Route path="/incidents" element={<Incidents />} /><Route path="/incidents/:incidentId" element={<IncidentDetail />} /><Route path="/test-cases" element={<TestCases />} /><Route path="/results" element={<Results />} /></Routes></Layout>} /></Routes>
+  return <Routes><Route path="/app/*" element={<AppUnderTest />} /><Route path="*" element={<Layout><Routes><Route path="/" element={<Home />} /><Route path="/incidents" element={<Incidents />} /><Route path="/incidents/:incidentId" element={<IncidentDetail />} /><Route path="/test-cases" element={<TestCases />} /><Route path="/login" element={<Login />} /><Route path="/forgot-password" element={<ForgotPassword />} /><Route path="/results" element={<Results />} /></Routes></Layout>} /></Routes>
 }

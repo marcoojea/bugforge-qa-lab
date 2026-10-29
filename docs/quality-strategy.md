@@ -34,3 +34,9 @@ cada ficha del catálogo debe permitir recorrer el mismo ciclo:
 
 los casos intencionadamente defectuosos usan `test.fail` mientras la incidencia está abierta. los casos propuestos muestran el patrón esperado y quedan identificados para no confundir cobertura existente con trabajo pendiente.
 
+## referencias públicas
+
+- [owasp web security testing guide: password reset](https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/04-Authentication/09-Weak_Password_Change_or_Reset_Functionalities/): guía para revisar recuperación, cambio de contraseña y control de identidad.
+- [playwright best practices](https://playwright.dev/docs/best-practices): localizadores resistentes, aislamiento y aserciones web-first.
+- [playwright assertions](https://playwright.dev/docs/test-assertions): expectativas que esperan y reintentan estados observables.
+
