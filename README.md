@@ -1,5 +1,7 @@
 # bugforge-qa-lab
 
+> **EN:** Public QA and web development lab. It contains an educational React and TypeScript app with intentional bugs, a documented bug catalog and Playwright E2E tests. It shows how to explore an application, document defects with evidence, turn them into automated tests and state the limits of each check. Runs locally; PostgreSQL is optional.
+
 laboratorio público de qa y desarrollo web. contiene una aplicación educativa con fallos intencionados, un catálogo de incidencias y automatización e2e con playwright.
 
 ## objetivo
