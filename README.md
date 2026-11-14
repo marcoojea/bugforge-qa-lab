@@ -2,49 +2,49 @@
 
 > **EN:** Public QA and web development lab. It contains an educational React and TypeScript app with intentional bugs, a documented bug catalog and Playwright E2E tests. It shows how to explore an application, document defects with evidence, turn them into automated tests and state the limits of each check. Runs locally; PostgreSQL is optional.
 
-laboratorio público de qa y desarrollo web. contiene una aplicación educativa con fallos intencionados, un catálogo de incidencias y automatización e2e con playwright.
+Laboratorio público de QA y desarrollo web. Contiene una aplicación educativa con fallos intencionados, un catálogo de incidencias y automatización E2E con Playwright.
 
-## objetivo
+## Objetivo
 
-demostrar criterio profesional de testing: explorar una aplicación, detectar problemas, documentar evidencias, convertir casos en pruebas automatizadas y explicar los límites de cada comprobación.
+Demostrar criterio profesional de testing: explorar una aplicación, detectar problemas, documentar evidencias, convertir casos en pruebas automatizadas y explicar los límites de cada comprobación.
 
-## alcance inicial
+## Alcance inicial
 
-- aplicación react + typescript con varias páginas y formularios.
-- api node con validación de servidor, permisos simulados y almacenamiento en memoria o PostgreSQL.
-- flujos de usuarios, incidencias, casos de prueba y panel de resultados.
-- datos locales deterministas, sin autenticación real, pagos ni despliegue complejo.
-- fallos intencionados de validación, usabilidad, navegación, accesibilidad, estados, responsive y permisos simulados.
-- catálogo de calidad con gravedad, reproducción, esperado, actual y estado.
-- tests e2e con playwright, fixtures reutilizables, trazas, capturas y vídeo cuando proceda.
-- lint, typecheck, build y ejecución en github actions.
+- Aplicación React + TypeScript con varias páginas y formularios.
+- API Node con validación de servidor, permisos simulados y almacenamiento en memoria o PostgreSQL.
+- Flujos de usuarios, incidencias, casos de prueba y panel de resultados.
+- Datos locales deterministas, sin autenticación real, pagos ni despliegue complejo.
+- Fallos intencionados de validación, usabilidad, navegación, accesibilidad, estados, responsive y permisos simulados.
+- Catálogo de calidad con gravedad, reproducción, esperado, actual y estado.
+- Tests E2E con Playwright, fixtures reutilizables, trazas, capturas y vídeo cuando proceda.
+- Lint, typecheck, build y ejecución en GitHub Actions.
 
-## arquitectura mínima
+## Arquitectura mínima
 
-el laboratorio usa una interfaz frontend y una api educativa opcional:
+El laboratorio usa una interfaz frontend y una API educativa opcional:
 
-- react + typescript + vite para la interfaz.
-- react router para navegación.
-- fixtures tipadas para usuarios, incidencias, casos y resultados.
-- servicios locales pequeños para centralizar lectura y mutaciones de datos.
-- playwright para pruebas de navegador.
-- github actions para instalar, validar, construir y ejecutar e2e.
-- `node:http`, `zod` y `pg` para el contrato de api.
+- React + TypeScript + Vite para la interfaz.
+- React Router para navegación.
+- Fixtures tipadas para usuarios, incidencias, casos y resultados.
+- Servicios locales pequeños para centralizar lectura y mutaciones de datos.
+- Playwright para pruebas de navegador.
+- GitHub Actions para instalar, validar, construir y ejecutar E2E.
+- `node:http`, `zod` y `pg` para el contrato de API.
 
-la api funciona en memoria por defecto. PostgreSQL se activa con `DATABASE_URL` y se puede iniciar con `docker compose`.
+La API funciona en memoria por defecto. PostgreSQL se activa con `DATABASE_URL` y se puede iniciar con `docker compose`.
 
-## comportamiento e invariantes
+## Comportamiento e invariantes
 
-- cada flujo importante debe tener una ruta estable y un nombre accesible.
-- datos de prueba deben poder reiniciarse y producir siempre el mismo estado inicial.
-- cada incidencia debe enlazar con una pantalla, pasos de reproducción, resultado esperado y resultado actual.
-- los fallos intencionados deben estar aislados, explicados y no impedir explorar el resto del laboratorio.
-- tests deben esperar estados observables, no tiempos arbitrarios.
-- formularios deben conservar etiquetas, foco y mensajes asociados incluso cuando contengan errores intencionados.
-- vistas deben funcionar con teclado y en tamaños móviles representativos.
-- resultados e2e fallidos deben conservar evidencia útil.
+- Cada flujo importante debe tener una ruta estable y un nombre accesible.
+- Datos de prueba deben poder reiniciarse y producir siempre el mismo estado inicial.
+- Cada incidencia debe enlazar con una pantalla, pasos de reproducción, resultado esperado y resultado actual.
+- Los fallos intencionados deben estar aislados, explicados y no impedir explorar el resto del laboratorio.
+- Tests deben esperar estados observables, no tiempos arbitrarios.
+- Formularios deben conservar etiquetas, foco y mensajes asociados incluso cuando contengan errores intencionados.
+- Vistas deben funcionar con teclado y en tamaños móviles representativos.
+- Resultados E2E fallidos deben conservar evidencia útil.
 
-## estructura actual y prevista
+## Estructura actual y prevista
 
 ```text
 src/
@@ -69,9 +69,9 @@ docs/
   decisions/
 ```
 
-la primera slice ya incluye la navegación pública, la aplicación bajo prueba, fixtures de usuarios e incidencias y un formulario de creación local.
+La primera slice ya incluye la navegación pública, la aplicación bajo prueba, fixtures de usuarios e incidencias y un formulario de creación local.
 
-## instalación y ejecución
+## Instalación y ejecución
 
 ```bash
 npm install
@@ -79,9 +79,9 @@ npm run dev
 npm run api
 ```
 
-para PostgreSQL: `docker compose up -d postgres` y consulta [docs/api.md](docs/api.md).
+Para PostgreSQL: `docker compose up -d postgres` y consulta [docs/api.md](docs/api.md).
 
-comprobaciones locales:
+Comprobaciones locales:
 
 ```bash
 npm run lint
@@ -91,72 +91,72 @@ npm run test:e2e
 npm run test:api
 ```
 
-los tests e2e usan Chromium y levantan Vite automáticamente. la suite separa flujos correctos de fallos conocidos; estos últimos usan `test.fail` y deben seguir fallando mientras la incidencia siga abierta.
+Los tests E2E usan Chromium y levantan Vite automáticamente. La suite separa flujos correctos de fallos conocidos; estos últimos usan `test.fail` y deben seguir fallando mientras la incidencia siga abierta.
 
-## estrategia de testing
+## Estrategia de testing
 
-la estrategia completa está en [docs/quality-strategy.md](docs/quality-strategy.md). combina lint, typecheck, build, pruebas unitarias de fixtures, e2e con Playwright y revisión manual de teclado y responsive.
+La estrategia completa está en [docs/quality-strategy.md](docs/quality-strategy.md). Combina lint, typecheck, build, pruebas unitarias de fixtures, E2E con Playwright y revisión manual de teclado y responsive.
 
-## cómo usar el laboratorio como libro de bugs
+## Cómo usar el laboratorio como libro de bugs
 
-entra en `incidencias` y abre la ficha de cualquier bug. cada ficha sigue el mismo recorrido:
+Entra en `incidencias` y abre la ficha de cualquier bug. Cada ficha sigue el mismo recorrido:
 
-1. detectar: pasos manuales y señales que confirman el problema.
-2. documentar: qué datos, evidencias y contexto debe incluir un buen reporte.
-3. automatizar: código Playwright, archivo de referencia y estado del test.
+1. Detectar: pasos manuales y señales que confirman el problema.
+2. Documentar: qué datos, evidencias y contexto debe incluir un buen reporte.
+3. Automatizar: código Playwright, archivo de referencia y estado del test.
 
-el botón `reproducir en la aplicación` lleva al flujo bajo prueba. los ejemplos marcados como `automatizado` están cubiertos por la suite actual; los marcados como `propuesto` enseñan el siguiente caso que debería incorporarse.
+El botón `reproducir en la aplicación` lleva al flujo bajo prueba. Los ejemplos marcados como `automatizado` están cubiertos por la suite actual; los marcados como `propuesto` enseñan el siguiente caso que debería incorporarse.
 
-la interfaz usa una identidad visual dark arcade: azul marino como base, acentos cyan/lima/rosa para estados y una cuadrícula responsive para escanear el catálogo como un panel técnico.
+La interfaz usa una identidad visual dark arcade: azul marino como base, acentos cyan/lima/rosa para estados y una cuadrícula responsive para escanear el catálogo como un panel técnico.
 
-la sección `acceso demo` contiene un login, recuperación de contraseña y cierre de sesión simulados. no hay autenticación real ni credenciales externas: se usan para practicar casos básicos de validación, sesión, permisos, mensajes de error, estados de carga y navegación.
+La sección `acceso demo` contiene un login, recuperación de contraseña y cierre de sesión simulados. No hay autenticación real ni credenciales externas: se usan para practicar casos básicos de validación, sesión, permisos, mensajes de error, estados de carga y navegación.
 
-## decisiones técnicas
+## Decisiones técnicas
 
-la primera decisión arquitectónica está documentada en [docs/decisions/0001-frontend-only.md](docs/decisions/0001-frontend-only.md). se prioriza ejecución local simple sobre introducir backend antes de necesitarlo.
+La primera decisión arquitectónica está documentada en [docs/decisions/0001-frontend-only.md](docs/decisions/0001-frontend-only.md). Se prioriza ejecución local simple sobre introducir backend antes de necesitarlo.
 
-la api y PostgreSQL están documentados en [docs/decisions/0002-api-and-postgresql.md](docs/decisions/0002-api-and-postgresql.md) y [docs/api.md](docs/api.md).
+La API y PostgreSQL están documentados en [docs/decisions/0002-api-and-postgresql.md](docs/decisions/0002-api-and-postgresql.md) y [docs/api.md](docs/api.md).
 
-## limitaciones conocidas
+## Limitaciones conocidas
 
-- la interfaz usa fixtures locales; la api persiste solo cuando se activa PostgreSQL.
-- los permisos son simulados; no hay autenticación real.
-- la aplicación contiene defectos intencionados y no representa un producto listo para producción.
-- el repositorio es público y está publicado en GitHub.
+- La interfaz usa fixtures locales; la API persiste solo cuando se activa PostgreSQL.
+- Los permisos son simulados; no hay autenticación real.
+- La aplicación contiene defectos intencionados y no representa un producto listo para producción.
+- El repositorio es público y está publicado en GitHub.
 - `main` está protegido con el ruleset `protect-main` y el job `quality`.
 
-## mejoras futuras
+## Mejoras futuras
 
-- completar todas las reproducciones e2e del catálogo.
-- añadir estados de carga, error y lista vacía más variados.
-- mantener actualizado el ruleset `protect-main` si cambia el workflow de ci.
+- Completar todas las reproducciones E2E del catálogo.
+- Añadir estados de carga, error y lista vacía más variados.
+- Mantener actualizado el ruleset `protect-main` si cambia el workflow de CI.
 
-## documentación
+## Documentación
 
-- [producto y cambios](CHANGELOG.md)
-- objetivo y alcance: este documento.
-- arquitectura: este documento y las decisiones técnicas que se añadan.
-- guía de instalación y ejecución: sección de instalación y scripts de `package.json`.
-- catálogo de incidencias: `src/data/qualityCatalog.ts` y sección visible en la aplicación.
-- estrategia de testing: [docs/quality-strategy.md](docs/quality-strategy.md).
-- limitaciones y mejoras futuras: se mantendrán aquí y en `CHANGELOG.md`.
+- [Producto y cambios](CHANGELOG.md)
+- Objetivo y alcance: este documento.
+- Arquitectura: este documento y las decisiones técnicas que se añadan.
+- Guía de instalación y ejecución: sección de instalación y scripts de `package.json`.
+- Catálogo de incidencias: `src/data/qualityCatalog.ts` y sección visible en la aplicación.
+- Estrategia de testing: [docs/quality-strategy.md](docs/quality-strategy.md).
+- Limitaciones y mejoras futuras: se mantendrán aquí y en `CHANGELOG.md`.
 
-## fases
+## Fases
 
-1. preparar proyecto y aplicación mínima: completado.
-2. comprobar ejecución, lint, typecheck y build: completado.
-3. añadir fallos intencionados y catálogo de incidencias: completado.
-4. crear tests de playwright por funcionalidad: completado.
-5. añadir evidencias, documentación completa y github actions: completado.
-6. revisar accesibilidad, responsive y estabilidad de los tests: en mejora continua.
-7. añadir api con validación y PostgreSQL reproducible: completado.
+1. Preparar proyecto y aplicación mínima: completado.
+2. Comprobar ejecución, lint, typecheck y build: completado.
+3. Añadir fallos intencionados y catálogo de incidencias: completado.
+4. Crear tests de Playwright por funcionalidad: completado.
+5. Añadir evidencias, documentación completa y GitHub Actions: completado.
+6. Revisar accesibilidad, responsive y estabilidad de los tests: en mejora continua.
+7. Añadir API con validación y PostgreSQL reproducible: completado.
 
-cada fase debe dejar el repositorio en un estado comprobable antes de iniciar la siguiente.
+Cada fase debe dejar el repositorio en un estado comprobable antes de iniciar la siguiente.
 
-## estado actual
+## Estado actual
 
-repositorio público creado. aplicación mínima ejecutable, catálogo, automatización y ci preparados.
+Repositorio público creado. Aplicación mínima ejecutable, catálogo, automatización y CI preparados.
 
-## licencia
+## Licencia
 
-licencia MIT. consulta [LICENSE](LICENSE).
+Licencia MIT. Consulta [LICENSE](LICENSE).
